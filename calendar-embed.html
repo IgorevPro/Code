@@ -1,0 +1,685 @@
+<link rel="stylesheet" href="https://fengyuanchen.github.io/datepicker/css/datepicker.css">
+
+<!-- You can put your custom CSS attributes -->
+<style>
+/* You can apply your own colors below!  */
+:root {
+  --main-light-color: #e9e6e2; /* is the light grey */
+  --main-dark-color: black; /* is the text */
+  --main-active-color: #b18745; /* is the highlight */
+}
+
+.datepicker-dropdown {
+  border-radius: 6px !important;
+  border: 0 !important;
+  -webkit-box-shadow: 0px 48px 88px rgba(23, 9, 54, 0.08);
+  box-shadow: 0px 48px 88px rgba(23, 9, 54, 0.08);
+  box-sizing: border-box;
+}
+.cf-header {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  padding: 10px 0 20px 0;
+}
+
+.cf-day-num {
+  font-size: 14px;
+  font-weight: bold;
+}
+.cf-day-price {
+  color: #b18745;
+}
+button.cf-next-btn {
+  width: 24px;
+  color: white;
+  border-radius: 5px;
+  background: #b18745;
+}
+button.cf-prev-btn {
+  width: 24px;
+  color: white;
+  border-radius: 5px;
+  background: #b18745;
+}
+.datepicker-panel > ul[data-view="week"] > li {
+  background-color: var(--main-light-color);
+  color: var(--main-dark-color);
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+  height: initial;
+  padding-top: 3px;
+  margin-bottom: 4px;
+}
+
+.datepicker-panel > ul[data-view="week"] > li:hover {
+  background-color: var(--main-light-color);
+  color: var(--main-dark-color);
+  border-radius: 0px;
+}
+
+.datepicker-panel > ul[data-view="week"] li:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.datepicker-panel > ul[data-view="week"] li:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.datepicker-top-left::before,
+.datepicker-top-left::after {
+  display: none;
+}
+
+.datepicker-panel > ul > li.highlighted {
+  color: var(--main-active-color);
+  background: none !important;
+  border: 1px solid var(--main-light-color);
+  border-radius: 8px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.datepicker-panel > ul > li.picked,
+.datepicker-panel > ul > li.picked:hover {
+  color: var(--main-active-color);
+  background: var(--main-light-color);
+  border-radius: 8px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+li[data-view="month current"],
+li[data-view="year current"] {
+  text-align: left;
+  color: var(--main-dark-color);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  padding-left: 15px;
+  border-radius: 6px;
+}
+
+.datepicker-panel > ul > li:hover {
+  background: var(--main-light-color);
+  border-radius: 6px;
+}
+
+li[data-view="month current"],
+li[data-view="year current"],
+li[data-view="years current"] {
+  margin-bottom: 4px !important;
+}
+
+@media screen and (min-width: 768px) {
+  .datepicker-dropdown {
+    width: 364px;
+    padding: 12px;
+  }
+
+  .datepicker-panel > ul > li {
+    width: 48px;
+    height: 48px;
+    padding-top: 10px;
+  }
+
+  li[data-view="month next"],
+  li[data-view="year next"],
+  li[data-view="years next"] {
+    position: absolute;
+    right: 18px;
+  }
+
+  li[data-view="month prev"],
+  li[data-view="year prev"],
+  li[data-view="years prev"] {
+    position: absolute;
+    right: 66px;
+  }
+
+  ul[data-view="months"] li,
+  ul[data-view="years"] li {
+    padding-top: 0px;
+    width: 57px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .datepicker-panel {
+    transform: scale(0.97);
+  }
+}
+</style>
+
+<style id="custom-calendar-styles">
+/* Calendar - only required styles; other form styles are unchanged */
+.cf-calendar {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 8px;
+  user-select: none;
+  font-family: inherit;
+}
+.cf-cal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.cf-cal-nav {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.cf-month-title {
+  font-weight: 600;
+  min-width: 170px;
+  text-align: center;
+}
+.cf-weekdays,
+.cf-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.cf-weekday {
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  padding: 6px 0;
+}
+.cf-day {
+  min-height: 70px;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid #b18745;
+  background: #fff;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 6px;
+}
+.cf-day.other-month {
+  opacity: 0.35;
+}
+.cf-day.disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.cf-day .date-num {
+  font-size: 14px;
+  font-weight: 600;
+}
+.cf-day .day-price {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
+  text-align: center;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.04);
+}
+.cf-day.selected {
+  outline: 3px solid #b18745;
+  z-index: 2;
+  background: linear-gradient(180deg, #ffffff, #f5faff);
+}
+.cf-selected-list {
+  margin-top: 8px;
+  font-size: 13px;
+}
+.cf-day.past {
+  opacity: 0.4;
+  background: #a9a9a93b;
+}
+.markup-label {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: -0.7px;
+  border-radius: 5px;
+  padding: 3px;
+  background: rgb(229, 242, 255);
+}
+.cf-small-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 6px;
+}
+@media (max-width: 520px) {
+  .cf-day {
+    min-height: 56px;
+  }
+  .cf-month-title {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 520px) {
+  .cf-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+
+  .cf-day {
+    min-height: 56px;
+    padding: 4px;
+  }
+
+  .cf-day-num {
+    font-size: 12px;
+  }
+
+  .cf-day-price {
+    font-size: 11px;
+  }
+
+  .cf-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 5;
+  }
+
+  .cf-day-booked {
+    font-size: 11px;
+  }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/gh/videsigns/webflow-tools@latest/multi-step.js"></script>
+<script>
+(function () {
+  // === CONFIG ===
+  const BOOKING_API_URL =
+    "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiD4LVkmCApSah_CdwiG7xkdnS9gZugOgpl0EeY_-ycFnOpB8y5Q0ENJDR03a1W5Gji4dFVQl1ITOKZ4RG3yfONdXLo-8i7hUzozB6qfaECAhie2JyuhY6YHvxN76RIkuc-D4I1dBWe68fBDyPlo10IM8GzYjVhUH2vRmIseAmDuR5KFCgjVKLQ_twNfzL9jQPQCt8EIeCMzk_p87h6qg8ly1HXQ9UAfUPdQO4MZWOrxqvnvbW4sPrv3FObvIeXvmubxXOW0h46YZT1ng2b5L02vqeJyJ33fgArirID&lib=MqG_YqKtqXbE4i9hldVKCzbrgaRX0XKlY";
+
+  const extraGuestPrice = 120;
+
+  // Holiday markup (optional, kept from your current logic)
+  const holidayMarkup = 0.05;
+  const usHolidays = ["01-01", "07-04", "12-25", "11-11", "06-19", "12-31"];
+
+  // Base price tiers (unchanged)
+  const priceTable = {
+    30: { silver: 5500, gold: 5900, platinum: 9500, diamond: 10000 },
+    40: { silver: 5800, gold: 6700, platinum: 10500, diamond: 11000 },
+    50: { silver: 6100, gold: 7100, platinum: 11400, diamond: 12000 },
+    60: { silver: 6400, gold: 7500, platinum: 12300, diamond: 13000 },
+    70: { silver: 6700, gold: 7900, platinum: 13200, diamond: 14000 },
+    80: { silver: 7000, gold: 8300, platinum: 14100, diamond: 15000 },
+    90: { silver: 7300, gold: 8700, platinum: 15000, diamond: 16000 },
+    100: { silver: 7500, gold: 9000, platinum: 15900, diamond: 17000 },
+    150: { silver: 8000, gold: 10000, platinum: 19800, diamond: 21000 },
+    200: { silver: 8500, gold: 11000, platinum: 24500, diamond: 26000 },
+    250: { silver: 9000, gold: 12000, platinum: 29000, diamond: 31000 },
+    300: { silver: 9500, gold: 13000, platinum: 33500, diamond: 36000 },
+  };
+
+  // === SEASON DISCOUNTS (from your table) ===
+  // May - October
+  // Mon-Thu: Silver -15%, Gold -20%, Platinum -15%, Diamond -12%
+  // Fri:     Silver -10%, Gold -15%, Platinum -10%, Diamond -8%
+  // Sat-Sun: not provided in your table -> default 0% (no discount)
+  //
+  // November - April (low season)
+  // Mon-Thu: Silver -30%, Gold -25%, Platinum -16%, Diamond -12%
+  // Fri:     Silver -20%, Gold -22%, Platinum -15%, Diamond -8%
+  // Sat-Sun: Silver -15%, Gold -20%, Platinum -13%, Diamond -7%
+  const seasonDiscounts = {
+    may_oct: {
+      mon_thu: { silver: -0.15, gold: -0.2, platinum: -0.15, diamond: -0.12 },
+      fri: { silver: -0.1, gold: -0.15, platinum: -0.1, diamond: -0.08 },
+      sat_sun: { silver: 0.0, gold: 0.0, platinum: 0.0, diamond: 0.0 },
+    },
+    nov_apr: {
+      mon_thu: { silver: -0.3, gold: -0.25, platinum: -0.16, diamond: -0.12 },
+      fri: { silver: -0.2, gold: -0.22, platinum: -0.15, diamond: -0.08 },
+      sat_sun: { silver: -0.15, gold: -0.2, platinum: -0.13, diamond: -0.07 },
+    },
+  };
+
+  // If you want May-Oct weekends to also have discounts, edit seasonDiscounts.may_oct.sat_sun above.
+
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+  const state = {
+    guests: 0,
+    selectedISO: null,
+    packageKey: "silver",
+    bookedDates: [],
+    isFormValid: false,
+  };
+
+  // === FETCH & NORMALIZE DATES ===
+  function normalizeBookedDates(dates) {
+    return dates.map((d) => {
+      const dt = new Date(d);
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth() + 1).padStart(2, "0");
+      const day = String(dt.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    });
+  }
+
+  async function fetchBookedDates() {
+    try {
+      const res = await fetch(BOOKING_API_URL);
+      const data = await res.json();
+      if (data && data.bookedDates) state.bookedDates = normalizeBookedDates(data.bookedDates);
+      console.log("🔒 Booked dates:", state.bookedDates);
+    } catch (e) {
+      console.warn("Error loading booked dates:", e);
+    }
+  }
+
+  // === UTILS ===
+  function isoFromDate(d) {
+    return (
+      d.getFullYear() +
+      "-" +
+      String(d.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(d.getDate()).padStart(2, "0")
+    );
+  }
+
+  function displayFromDateISO(iso) {
+    if (!iso) return "";
+    const p = iso.split("-");
+    return `${p[1]}/${p[2]}/${p[0].slice(2)}`;
+  }
+
+  function isHoliday(d) {
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return usHolidays.includes(`${mm}-${dd}`);
+  }
+
+  function isPastDate(d) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const check = new Date(d);
+    check.setHours(0, 0, 0, 0);
+    return check < today;
+  }
+
+  function findTier(guests) {
+    const tiers = Object.keys(priceTable)
+      .map(Number)
+      .sort((a, b) => a - b);
+    let chosen = tiers[0];
+    for (const t of tiers) if (t <= guests) chosen = t;
+    return chosen;
+  }
+
+  function debounce(fn, delay) {
+    let t;
+    return (...a) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn(...a), delay);
+    };
+  }
+
+  // === SEASON HELPERS ===
+  function getSeasonKey(d) {
+    const m = d.getMonth(); // 0=Jan
+    // May(4) ... Oct(9)
+    if (m >= 4 && m <= 9) return "may_oct";
+    // Nov(10) ... Dec(11) OR Jan(0) ... Apr(3)
+    return "nov_apr";
+  }
+
+  function getDayGroup(d) {
+    const day = d.getDay(); // 0=Sun, 1=Mon, ... 6=Sat
+    if (day >= 1 && day <= 4) return "mon_thu";
+    if (day === 5) return "fri";
+    return "sat_sun";
+  }
+
+  function getDiscountPct(d, pkg) {
+    const seasonKey = getSeasonKey(d);
+    const group = getDayGroup(d);
+    return seasonDiscounts?.[seasonKey]?.[group]?.[pkg] ?? 0;
+  }
+
+  // === PRICE CALC ===
+  function computeBasePrice(guests, pkg, dateISO) {
+    const tier = findTier(guests);
+    let total = (priceTable[tier]?.[pkg] ?? 0) + Math.max(0, guests - tier) * extraGuestPrice;
+
+    if (dateISO) {
+      const d = new Date(dateISO);
+
+      // Apply season discount
+      const discountPct = getDiscountPct(d, pkg);
+      total *= 1 + discountPct;
+
+      // Optional holiday markup on top
+      if (isHoliday(d)) total *= 1 + holidayMarkup;
+    }
+
+    return Math.round(total);
+  }
+
+  // === CALENDAR ===
+  async function initializeCalendar() {
+    await fetchBookedDates();
+
+    const dateInput = $('#Date, [data-input="datepicker"], input[name="Date"], input[name="date"]');
+    if (!dateInput) {
+      setTimeout(initializeCalendar, 500);
+      return;
+    }
+    if ($(".cf-calendar")) return;
+
+    const calendar = document.createElement("div");
+    calendar.className = "cf-calendar";
+
+    const header = document.createElement("div");
+    header.className = "cf-header";
+
+    const prevBtn = document.createElement("button");
+    prevBtn.className = "cf-prev-btn";
+    prevBtn.type = "button";
+    prevBtn.textContent = "‹";
+
+    const title = document.createElement("div");
+    title.className = "cf-title";
+
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "cf-next-btn";
+    nextBtn.type = "button";
+    nextBtn.textContent = "›";
+
+    header.append(prevBtn, title, nextBtn);
+    calendar.appendChild(header);
+
+    const grid = document.createElement("div");
+    grid.className = "cf-grid";
+    calendar.appendChild(grid);
+
+    dateInput.insertAdjacentElement("afterend", calendar);
+
+    let curMonth = new Date();
+
+    function renderCalendar(d) {
+      const year = d.getFullYear();
+      const month = d.getMonth();
+
+      title.textContent = d.toLocaleString("default", { month: "long", year: "numeric" });
+      grid.innerHTML = "";
+
+      const firstDay = new Date(year, month, 1);
+      const startDay = firstDay.getDay();
+      let cur = new Date(year, month, 1 - startDay);
+
+      for (let i = 0; i < 42; i++) {
+        const iso = isoFromDate(cur);
+
+        const dayEl = document.createElement("div");
+        dayEl.className = "cf-day";
+
+        if (cur.getMonth() !== month) dayEl.classList.add("other-month");
+        if (isPastDate(cur)) dayEl.classList.add("past");
+        if (state.bookedDates.includes(iso)) dayEl.classList.add("booked");
+
+        const numEl = document.createElement("div");
+        numEl.className = "cf-day-num";
+        numEl.textContent = cur.getDate();
+        dayEl.appendChild(numEl);
+
+        const isSelectable =
+          !dayEl.classList.contains("past") &&
+          !dayEl.classList.contains("booked") &&
+          cur.getMonth() === month;
+
+        if (isSelectable) {
+          const priceVal = computeBasePrice(state.guests, state.packageKey, iso);
+
+          const priceEl = document.createElement("div");
+          priceEl.className = "cf-day-price";
+          priceEl.textContent = `$${priceVal}`;
+          dayEl.appendChild(priceEl);
+
+          dayEl.addEventListener("click", () => {
+            state.selectedISO = iso;
+
+            dateInput.value = displayFromDateISO(iso);
+            dateInput.dispatchEvent(new Event("input", { bubbles: true }));
+            dateInput.dispatchEvent(new Event("change", { bubbles: true }));
+
+            if ($("#Guests")) $("#Guests").dispatchEvent(new Event("input", { bubbles: true }));
+
+            renderCalendar(curMonth);
+            updateOutputs();
+          });
+        } else if (dayEl.classList.contains("booked")) {
+          const bookedEl = document.createElement("div");
+          bookedEl.className = "cf-day-booked";
+          bookedEl.textContent = "Booked";
+          dayEl.appendChild(bookedEl);
+        }
+
+        if (state.selectedISO === iso) dayEl.classList.add("selected");
+
+        grid.appendChild(dayEl);
+        cur.setDate(cur.getDate() + 1);
+      }
+    }
+
+    prevBtn.addEventListener("click", () => {
+      curMonth.setMonth(curMonth.getMonth() - 1);
+      renderCalendar(curMonth);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      curMonth.setMonth(curMonth.getMonth() + 1);
+      renderCalendar(curMonth);
+    });
+
+    window.renderCalendar = renderCalendar;
+    window.curMonth = curMonth;
+    window.calendarRendered = true;
+
+    renderCalendar(curMonth);
+    updateOutputs();
+  }
+
+  // === PACKAGE & GUESTS ===
+  function getPackageKey(value) {
+    const v = String(value || "").toLowerCase();
+    if (v.includes("ilver") || v === "silver") return "silver";
+    if (v.includes("old") || v === "gold") return "gold";
+    if (v.includes("latinum") || v === "platinum") return "platinum";
+    if (v.includes("iamond") || v === "diamond") return "diamond";
+    return "silver";
+  }
+
+  function initializePackageSelection() {
+    const inputs = $$('input[type="radio"]');
+    inputs.forEach((input) => {
+      if (input.checked) state.packageKey = getPackageKey(input.value);
+      input.addEventListener("change", () => {
+        if (input.checked) {
+          state.packageKey = getPackageKey(input.value);
+          if (window.calendarRendered) window.renderCalendar(window.curMonth);
+          updateOutputs();
+        }
+      });
+    });
+    updateOutputs();
+  }
+
+  function initializeGuests() {
+    const guestsEl = $("#Guests, input[name='guests'], input[name='Guests']");
+    if (!guestsEl) return;
+
+    state.guests = Number(guestsEl.value) || 0;
+    guestsEl.addEventListener(
+      "input",
+      debounce(() => {
+        state.guests = Number(guestsEl.value) || 0;
+        if (window.calendarRendered) window.renderCalendar(window.curMonth);
+        updateOutputs();
+      }, 200)
+    );
+  }
+
+  // === FORM UPDATES ===
+  function updateOutputs() {
+    const price = computeBasePrice(state.guests, state.packageKey, state.selectedISO);
+
+    if ($("#data-total")) $("#data-total").value = state.selectedISO || "";
+    if ($("#guest-total")) $("#guest-total").value = state.guests || "";
+    if ($("#price-total")) $("#price-total").value = price || 0;
+    if ($("#package-total")) $("#package-total").value = state.packageKey || "";
+
+    const dsDate = $('[data-summary="date"]');
+    const dsGuests = $('[data-summary="guests"]');
+    const dsPrice = $('[data-summary="price"]');
+    const dsPkg = $('[data-summary="package"]');
+
+    if (dsDate) dsDate.textContent = state.selectedISO ? displayFromDateISO(state.selectedISO) : "-";
+    if (dsGuests) dsGuests.textContent = state.guests || "-";
+    if (dsPrice) dsPrice.textContent = `$${price.toLocaleString()}`;
+    if (dsPkg) dsPkg.textContent = state.packageKey || "-";
+
+    const valid = state.guests > 0 && state.packageKey && state.selectedISO;
+    state.isFormValid = valid;
+
+    const btns = $$(".next-step-btn, [data-next-step], button[type='submit']");
+    btns.forEach((b) => {
+      b.disabled = !valid;
+      b.style.opacity = valid ? 1 : 0.6;
+      b.style.cursor = valid ? "pointer" : "not-allowed";
+    });
+  }
+
+  // === INIT ===
+  function initializeState() {
+    initializeGuests();
+    initializePackageSelection();
+    initializeCalendar();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(initializeState, 500));
+  } else {
+    setTimeout(initializeState, 500);
+  }
+})();
+</script>
